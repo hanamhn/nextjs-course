@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
+import Head from "next/head";
 import useSWR from "swr";
 
 import EventList from "../../components/events/event-list";
@@ -34,8 +35,20 @@ const FilteredEventsPage = (props) => {
 
   console.log(filterData);
 
+  let pageHeader = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content={`A list of filtered events.`} />
+    </Head>
+  );
+
   if (!loadedEvents) {
-    return <p className="center">Loading...</p>;
+    return (
+      <Fragment>
+        {pageHeader}
+        <p className="center">Loading...</p>
+      </Fragment>
+    );
   }
 
   const filteredYear = filterData[0];
@@ -55,6 +68,7 @@ const FilteredEventsPage = (props) => {
   ) {
     return (
       <Fragment>
+        {pageHeader}
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
@@ -77,6 +91,7 @@ const FilteredEventsPage = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <Fragment>
+        {pageHeader}
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -91,10 +106,11 @@ const FilteredEventsPage = (props) => {
   const date = new Date(numYear, numMonth - 1);
 
   return (
-    <div>
+    <Fragment>
+      {pageHeader}
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
-    </div>
+    </Fragment>
   );
 };
 
